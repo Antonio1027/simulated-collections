@@ -22,3 +22,19 @@ async def get_client(id: str):
         raise HTTPException(status_code=404, detail="Client not found")
     return Client(**client)
 
+@router.put("/{id}", response_model=Client)
+async def update_client(id: str, client_update: Client):
+    update_data = client_update.dict(exclude_unset=True)
+    update_data["updated_at"] = datetime.now()
+    updated_client = await client_repository.update(id, update_data)
+    if not updated_client:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return Client(**updated_client)
+
+@router.delete("/{id}")
+async def delete_client(id: str):
+    result = await client_repository.delete(id)
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="Client not found")
+    return {"message": "Client deleted"}
+
