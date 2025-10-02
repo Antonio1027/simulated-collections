@@ -1,0 +1,26 @@
+version: '3.8'
+services:
+  collections:
+    build: .
+    container_name: simulated-collections
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env.local
+    depends_on:
+      - mongodb
+  mongodb:
+    image: mongo:7
+    container_name: mongo_db
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: rootpassword
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+      - ./docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
+volumes:
+  mongo_data:

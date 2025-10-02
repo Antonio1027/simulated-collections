@@ -5,7 +5,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pip install --no-cache-dir fastapi uvicorn
+RUN pip install -r requirements.txt
 
 EXPOSE 8000
 
