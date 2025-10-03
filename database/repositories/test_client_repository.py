@@ -57,3 +57,5 @@ async def test_delete_client():
     assert result.deleted_count == 1
     deleted_client = await repo.get_by_id("64b8f0f5e1d3f2a5c6b7d8e9")
     assert deleted_client is None
+
+
