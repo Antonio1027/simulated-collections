@@ -1,4 +1,3 @@
-import pytest
 from database.models.card import NewCard
 from database.models.client import Client
 
