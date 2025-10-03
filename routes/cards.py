@@ -34,3 +34,11 @@ async def update_card(id: str, card_update: Card) -> Card:
     if not updated_card:
         raise HTTPException(status_code=404, detail="Card not found")
     return Card(**updated_card)
+
+
+@router.delete("/{id}")
+async def delete_card(id: str):
+    result = await card_repository.delete(id)
+    if not result or (hasattr(result, "deleted_count") and result.deleted_count == 0):
+        raise HTTPException(status_code=404, detail="Card not found")
+    return {"message": "Card deleted"}

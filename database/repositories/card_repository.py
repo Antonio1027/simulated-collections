@@ -25,3 +25,10 @@ class CardRepository(BaseRepository):
             return None
         await self.collection.update_one({"_id": obj_id}, {"$set": update_data})
         return await self.get_by_id(obj_id)
+
+    async def delete(self, card_id: str):
+        try:
+            obj_id = ObjectId(card_id)
+        except Exception:
+            return None
+        return await self.collection.delete_one({"_id": obj_id})
