@@ -24,4 +24,4 @@ class CardRepository(BaseRepository):
         except Exception:
             return None
         await self.collection.update_one({"_id": obj_id}, {"$set": update_data})
-        return await self.get_by_id(card_id)
+        return await self.get_by_id(obj_id)
