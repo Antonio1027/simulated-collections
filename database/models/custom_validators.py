@@ -12,3 +12,14 @@ class ModelWithObjectId:
         if isinstance(v, ObjectId):
             return str(v)
         return v
+
+
+class ClientId:
+    cliente_id: Optional[str] = Field(default=None, alias="cliente_id")
+
+    @field_validator("cliente_id", mode="before")
+    @classmethod
+    def validate_cliente_id(cls, v):
+        if isinstance(v, ObjectId):
+            return str(v)
+        return v
