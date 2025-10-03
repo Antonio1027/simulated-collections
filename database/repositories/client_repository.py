@@ -32,3 +32,7 @@ class ClientRepository(BaseRepository):
         except Exception:
             return None
         return await self.collection.delete_one({"_id": obj_id})
+
+    async def is_email_unique(self, email: str) -> bool:
+        existing = await self.collection.find_one({"email": email})
+        return existing is None

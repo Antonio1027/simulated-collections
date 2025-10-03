@@ -12,6 +12,8 @@ async def create_client(client: NewClient):
     client.created_at = datetime.now()
     client.updated_at = datetime.now()
     client_dict = client.model_dump(exclude_unset=True)
+    if not await client_repository.is_email_unique(client.email):
+        raise HTTPException(status_code=400, detail="Email already exists")
     client_id = await client_repository.create(client_dict)
     client.id = str(client_id)
     return client

@@ -2,7 +2,6 @@ from fastapi.testclient import TestClient
 from main import app
 import pytest
 from database.repositories.client_repository import ClientRepository
-from database.models.custom_validators import ClientValidator
 
 client = TestClient(app)
 client_id = "023456789abcdef01234567"
@@ -61,38 +60,35 @@ async def mock_delete_not_found(*args, **kwargs):
     return MockDeleteResult(deleted_count=0)
 
 
-def mock_is_email_unique(*args, **kwargs):
-    return False
-
-
-def mock_is_not_email_unique(*args, **kwargs):
+async def mock_is_email_unique(*args, **kwargs):
     return True
+
+
+async def mock_is_not_email_unique(*args, **kwargs):
+    return False
 
 
 def test_create_client(new_client_data, monkeypatch):
     monkeypatch.setattr(ClientRepository, "create", mock_client_repository_create)
-    monkeypatch.setattr(ClientValidator, "is_email_unique", mock_is_email_unique)
+    monkeypatch.setattr(ClientRepository, "is_email_unique", mock_is_email_unique)
     response = client.post("/clientes/", json=new_client_data)
     assert response.status_code == 200
     data = response.json()
-    assert data["nombre"] == data["nombre"]
-    assert data["email"] == data["email"]
+    assert data["nombre"] == new_client_data["nombre"]
+    assert data["email"] == new_client_data["email"]
     assert "_id" in data
 
 
 def test_create_client_duplicate_email(new_client_data, monkeypatch):
-    monkeypatch.setattr(ClientValidator, "is_email_unique", mock_is_not_email_unique)
+    monkeypatch.setattr(ClientRepository, "is_email_unique", mock_is_not_email_unique)
     response = client.post("/clientes/", json=new_client_data)
-    assert response.status_code == 422
-    assert (
-        response.json()["detail"][0]["msg"]
-        == "Value error, El correo electrónico ya está en uso"
-    )
+    assert response.status_code == 400
+    assert response.json()["detail"] == "Email already exists"
 
 
 def test_get_client(monkeypatch):
     monkeypatch.setattr(ClientRepository, "get_by_id", mock_client_repository_get_by_id)
-    monkeypatch.setattr(ClientValidator, "is_email_unique", mock_is_email_unique)
+    monkeypatch.setattr(ClientRepository, "is_email_unique", mock_is_email_unique)
     get_resp = client.get(f"/clientes/{client_id}")
     assert get_resp.status_code == 200
     data = get_resp.json()
@@ -117,7 +113,7 @@ def test_update_client(monkeypatch):
 def test_delete_client(new_client_data, monkeypatch):
     monkeypatch.setattr(ClientRepository, "create", mock_client_repository_create)
     monkeypatch.setattr(ClientRepository, "delete", mock_client_repository_delete)
-    monkeypatch.setattr(ClientValidator, "is_email_unique", mock_is_email_unique)
+    monkeypatch.setattr(ClientRepository, "is_email_unique", mock_is_email_unique)
     create_resp = client.post("/clientes/", json=new_client_data)
     client_id = create_resp.json()["_id"]
     delete_resp = client.delete(f"/clientes/{client_id}")

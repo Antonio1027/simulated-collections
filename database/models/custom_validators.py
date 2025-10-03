@@ -12,10 +12,3 @@ class ModelWithObjectId:
         if isinstance(v, ObjectId):
             return str(v)
         return v
-
-
-class ClientValidator:
-    @classmethod
-    async def is_email_unique(cls, email: str, collection) -> bool:
-        existing = await collection.find_one({"email": email})
-        return existing is None
