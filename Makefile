@@ -8,7 +8,7 @@ install:
 run:
 	venv/bin/uvicorn main:app --reload
 
-test:
+tests:
 	venv/bin/pytest -s || echo "No tests found"
 
 lint:
