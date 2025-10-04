@@ -16,7 +16,7 @@ This project is a FastAPI-based REST API for managing clients, cards, and collec
 
 ### Clone the repository
 ```sh
-git clone <your-repo-url>
+git clone git@github.com:Antonio1027/simulated-collections.git
 cd simulated-collections
 ```
 
