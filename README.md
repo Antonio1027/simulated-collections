@@ -112,5 +112,24 @@ main.py
 
 ```
 
+## Reglas de aprobación de un pago
+
+- El monto debe ser mayor a cero y menor igual que 500000.00
+- EL valor del campo codigo_motivo no debe estár en la lista de motivos de rechazo
+```
+CODIGO_MOTIVO_LIST = [
+    "01",  # Insufficient funds
+    "02",  # Card expired
+    "03",  # Invalid card
+    "04",  # Suspected fraud
+    "05",  # Card blocked
+    "06",  # Limit exceeded
+    "07",  # Technical error
+    "08",  # Duplicate transaction
+    "09",  # Invalid amount
+]
+```
+- El cobro se aprueba si la tarjeta no tiene mas de 2 cobros declinados en el mes actual
+
 ## License
 MIT
