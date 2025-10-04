@@ -9,7 +9,7 @@ class NewCollection(BaseModel, ModelWithObjectId, ClientId, AuditDateTimeFields)
     tarjeta_id: str
     monto: float
     fecha_intento: datetime
-    status: str
+    status: Optional[str] = None
     codigo_motivo: str
     reembolsado: Optional[bool] = None
     fecha_reembolso: Optional[str] = None

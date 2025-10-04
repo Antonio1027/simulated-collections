@@ -3,6 +3,7 @@ from typing import List
 from fastapi import APIRouter, HTTPException
 from database.models.collection import NewCollection
 from database.repositories.collection_repository import CollectionRepository
+from services.collection_approvement import CollectionApprovement
 
 router = APIRouter(prefix="/cobros", tags=["Collections"])
 collection_repository = CollectionRepository()
@@ -12,6 +13,10 @@ collection_repository = CollectionRepository()
 async def create_collection(collection: NewCollection) -> NewCollection:
     collection.created_at = datetime.now()
     collection_dict = collection.model_dump(exclude_unset=True)
+    if await CollectionApprovement().is_valid(collection):
+        collection_dict["status"] = "approved"
+    else:
+        collection_dict["status"] = "declined"
     collection_id = await collection_repository.create(collection_dict)
     collection_dict["id"] = collection_id
     return NewCollection(**collection_dict)

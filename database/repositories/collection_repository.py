@@ -1,5 +1,6 @@
 from bson import ObjectId
 from database.repositories.base import BaseRepository
+from datetime import datetime
 
 
 class CollectionRepository(BaseRepository):
@@ -24,3 +25,19 @@ class CollectionRepository(BaseRepository):
         async for doc in result:
             collections.append(doc)
         return collections
+
+    async def get_by_status_in_current_month(self, tarjeta_id: str, status: str):
+        start_of_month = datetime.now().replace(
+            day=1, hour=0, minute=0, second=0, microsecond=0
+        )
+        result = self.collection.find(
+            {
+                "tarjeta_id": tarjeta_id,
+                "status": status,
+                "created_at": {"$gte": start_of_month},
+            }
+        )
+        collections = []
+        async for doc in result:
+            collections.append(doc)
+        return len(collections)
