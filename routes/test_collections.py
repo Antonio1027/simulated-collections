@@ -47,6 +47,12 @@ def test_create_collection(new_collection_data, monkeypatch):
     monkeypatch.setattr(
         CollectionRepository, "create", mock_collection_repository_create
     )
-    response = client.post("/collections/", json=new_collection_data)
+    response = client.post("/cobros/", json=new_collection_data)
     assert response.status_code == 200
     assert response.json() == {"id": collection_id}
+
+
+def test_get_collections_by_client_id():
+    response = client.get(f"/cobros/client/{client_id}")
+    assert response.status_code == 200
+    assert isinstance(response.json(), list)

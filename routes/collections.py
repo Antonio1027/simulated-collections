@@ -11,3 +11,9 @@ async def create_collection(collection: NewCollection):
     collection_dict = collection.model_dump(exclude_unset=True)
     collection_id = await collection_repository.create(collection_dict)
     return {"id": collection_id}
+
+
+@router.get("/client/{client_id}")
+async def get_collections_by_client_id(client_id: str):
+    collections = await collection_repository.get_by_client_id(client_id)
+    return collections

@@ -19,6 +19,12 @@ class MockCollection:
         _id = query.get("_id")
         return self.data.get(_id)
 
+    async def find(self, query):
+        cliente_id = query.get("cliente_id")
+        for doc in self.data.values():
+            if doc.get("cliente_id") == cliente_id:
+                yield doc
+
     async def insert_one(self, document):
         _id = document.get("_id", "mock_id")
         self.data[ObjectId(_id)] = document
