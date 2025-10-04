@@ -77,5 +77,5 @@ async def test_pan_masked_exists():
         "bin": "123456",
     }
     await repo.create(card_data)
-    exists = await repo.pan_masked_exists("************5678")
-    assert exists
+    existing = await repo.pan_masked_exists("************5678")
+    assert existing is True
