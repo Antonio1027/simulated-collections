@@ -1,3 +1,4 @@
+import pytest
 from database.models.card import Card, NewCard
 from database.models.client import Client
 
@@ -26,9 +27,23 @@ def test_new_card_and_pan_masked():
         telefono="1231231234",
     )
     card = NewCard(
-        cliente_id=client.id, pan="4111111111115678", last4="5678", bin="123456"
+        cliente_id=client.id, pan="4111111111111111", last4="1111", bin="123456"
     )
     data = card.model_dump()
-    assert data["pan"] == "************5678"
-    assert data["last4"] == "5678"
+    assert data["pan"] == "************1111"
+    assert data["last4"] == "1111"
     assert data["bin"] == "123456"
+
+
+def test_new_card_with_pan_validation_error_exception():
+    client = Client(
+        id="64b8f0f5e1d3f2a5c6b7d8e7",
+        nombre="Model User",
+        email="modeluser@example.com",
+        telefono="1231231234",
+    )
+    with pytest.raises(ValueError):
+        card = NewCard(
+            cliente_id=client.id, pan="4111111111115678", last4="5678", bin="123456"
+        )
+        card.model_dump()
