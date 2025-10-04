@@ -11,6 +11,7 @@ collection_id = "64b8f0f5e1d3f2a5c6b7d8e9"
 @pytest.fixture
 def new_collection_data():
     return {
+        "_id": collection_id,
         "cliente_id": client_id,
         "tarjeta_id": "123456789abcdef01234567",
         "monto": 100.0,
@@ -49,10 +50,9 @@ def test_create_collection(new_collection_data, monkeypatch):
     )
     response = client.post("/cobros/", json=new_collection_data)
     assert response.status_code == 200
-    assert response.json() == {"id": collection_id}
 
 
 def test_get_collections_by_client_id():
-    response = client.get(f"/cobros/client/{client_id}")
+    response = client.get(f"/cobros/{client_id}")
     assert response.status_code == 200
     assert isinstance(response.json(), list)

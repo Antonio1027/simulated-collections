@@ -19,8 +19,8 @@ class CollectionRepository(BaseRepository):
         return str(result.inserted_id)
 
     async def get_by_client_id(self, client_id: str):
-        cursor = self.collection.find({"cliente_id": client_id})
+        result = self.collection.find({"cliente_id": client_id})
         collections = []
-        async for doc in cursor:
+        async for doc in result:
             collections.append(doc)
         return collections
