@@ -17,7 +17,7 @@ async def create_card(card: NewCard) -> Card:
         raise HTTPException(status_code=400, detail="Client not found")
     card_dict = card.model_dump(exclude_unset=True)
     card_dict["pan_masked"] = card_dict.pop("pan")
-    existing = card_repository.pan_masked_exists(card_dict["pan_masked"])
+    existing = await card_repository.pan_masked_exists(card_dict["pan_masked"])
     if existing:
         raise HTTPException(status_code=400, detail="Card with this PAN already exists")
     card_id = await card_repository.create(card_dict)

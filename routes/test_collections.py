@@ -62,6 +62,7 @@ async def mock_collections_by_client_id(*args, **kwargs):
         ]
     return []
 
+
 def test_create_collection(new_collection_data, monkeypatch):
     monkeypatch.setattr(
         CollectionRepository, "create", mock_collection_repository_create
