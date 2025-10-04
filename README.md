@@ -84,7 +84,17 @@ main.py
 }
 ```
 
-## Crear tarjetas de pruebas
+```
+curl --location 'http://localhost:8000/clientes/' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "nombre": "Antonio de Jesus",
+    "email": "shilong_92@hotmail.com",
+    "telefono": "5556784311"
+}'
+```
+
+### Crear tarjetas de pruebas
 
 
 ```json
@@ -107,10 +117,84 @@ main.py
     "cliente_id": YOUR_CLIENT_ID,
     "pan": "6721686452722417",
     "last4": "2417",
-    "bin": "5"
+    "bin": "6"
 }
 
 ```
+
+### curl requests
+
+```
+curl --location 'http://localhost:8000/tarjetas' \
+--header 'Content-Type: application/json' \
+--data '{
+    "cliente_id": "68e127b0d6d5b6bb11cf4b2d",
+    "pan": "4006257249775562",
+    "last4": "5562",
+    "bin": "4"
+}'
+
+
+curl --location 'http://localhost:8000/tarjetas' \
+--header 'Content-Type: application/json' \
+--data '{
+    "cliente_id": "68e127b0d6d5b6bb11cf4b2d",
+    "pan": "5785539506641734",
+    "last4": "1734",
+    "bin": "5"
+}'
+
+curl --location 'http://localhost:8000/tarjetas' \
+--header 'Content-Type: application/json' \
+--data '{
+    "cliente_id": "68e127b0d6d5b6bb11cf4b2d",
+    "pan": "6721686452722417",
+    "last4": "2417",
+    "bin": "6"
+}'
+
+```
+
+### Crear cobro
+```
+Aprobado
+
+curl --location 'http://localhost:8000/cobros/' \
+--header 'Content-Type: application/json' \
+--data '{
+    "cliente_id": "68e127b0d6d5b6bb11cf4b2d",
+    "tarjeta_id": "68e128f94fbb06d22dab15cf",
+    "monto": 200000.0,
+    "fecha_intento": "2024-06-20T12:00:00Z",
+    "codigo_motivo": "00",
+    "nombre": "Test Collection",
+    "descripcion": "Test Description"
+}'
+
+
+Rechazado
+
+curl --location 'http://localhost:8000/cobros/' \
+--header 'Content-Type: application/json' \
+--data '{
+    "cliente_id": "68e127b0d6d5b6bb11cf4b2d",
+    "tarjeta_id": "68e128f94fbb06d22dab15cf",
+    "monto": 200000.0,
+    "fecha_intento": "2024-06-20T12:00:00Z",
+    "codigo_motivo": "01",
+    "nombre": "Test Collection",
+    "descripcion": "Test Description"
+}'
+
+```
+
+### Crear un reembolso
+
+```
+curl --location --request POST 'http://localhost:8000/cobros/68e12ae32428b22c65e09682/reembolso'
+```
+
+
 
 ## Reglas de aprobación de un pago
 
