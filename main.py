@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from routes import clients, cards, collections
 
-app = FastAPI()
+app = FastAPI(swagger_ui_parameters={"syntaxHighlight": False})
 
 app.include_router(clients.router)
 app.include_router(cards.router)
