@@ -13,7 +13,7 @@ card_id = "123456789abcdef01234567"
 def new_card_data():
     return {
         "cliente_id": client_id,
-        "pan_masked": "************5678",
+        "pan": "4111111111115678",
         "last4": "5678",
         "bin": "123456",
     }
@@ -67,6 +67,7 @@ async def mock_updated_card(*args, **kwargs):
 
 def test_create_card(new_card_data, monkeypatch):
     monkeypatch.setattr(CardRepository, "create", mock_card_repository_create)
+    monkeypatch.setattr(CardRepository, "get_by_id", mock_card_repository_get_by_id)
     monkeypatch.setattr(ClientRepository, "get_by_id", mock_client_repository_get_by_id)
     response = client.post("/tarjetas/", json=new_card_data)
     assert response.status_code == 200

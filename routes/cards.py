@@ -8,14 +8,15 @@ card_repository = CardRepository()
 client_repository = ClientRepository()
 
 
-@router.post("/", response_model=NewCard)
-async def create_card(card: NewCard) -> NewCard:
+@router.post("/", response_model=Card)
+async def create_card(card: NewCard) -> Card:
     client = await client_repository.get_by_id(card.cliente_id)
     if not client:
         raise HTTPException(status_code=400, detail="Client not found")
     card_dict = card.model_dump(exclude_unset=True)
     card_id = await card_repository.create(card_dict)
     card.id = card_id
+    card = await card_repository.get_by_id(card_id)
     return card
 
 
