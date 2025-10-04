@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Build the MongoDB URL from environment variables
-MONGODB_HOST = "localhost"
+MONGODB_HOST = os.getenv("MONGODB_HOST", "mongodb")
 MONGODB_PORT = os.getenv("MONGODB_PORT", "27017")
 MONGODB_DB = os.getenv("MONGODB_DB", "simulated-collections")
 MONGODB_USER = os.getenv("MONGODB_USER", "collections")
