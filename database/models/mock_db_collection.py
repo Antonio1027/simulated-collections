@@ -20,9 +20,13 @@ class MockCollection:
         return self.data.get(_id)
 
     async def find(self, query):
-        cliente_id = query.get("cliente_id")
         for doc in self.data.values():
-            if doc.get("cliente_id") == cliente_id:
+            match = True
+            for key, value in query.items():
+                if doc.get(key) != value:
+                    match = False
+                    break
+            if match:
                 yield doc
 
     async def insert_one(self, document):

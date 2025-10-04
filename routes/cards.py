@@ -11,14 +11,19 @@ client_repository = ClientRepository()
 
 @router.post("/", response_model=Card)
 async def create_card(card: NewCard) -> Card:
+    card.created_at = datetime.now()
     client = await client_repository.get_by_id(card.cliente_id)
     if not client:
         raise HTTPException(status_code=400, detail="Client not found")
     card_dict = card.model_dump(exclude_unset=True)
+    card_dict["pan_masked"] = card_dict.pop("pan")
+    existing = await card_repository.pan_masked_exists(card_dict["pan_masked"])
+    if existing:
+        raise HTTPException(status_code=400, detail="Card with this PAN already exists")
     card_id = await card_repository.create(card_dict)
     card.id = card_id
     card = await card_repository.get_by_id(card_id)
-    return card
+    return Card(**card)
 
 
 @router.get("/{id}", response_model=Card)

@@ -32,3 +32,7 @@ class CardRepository(BaseRepository):
         except Exception:
             return None
         return await self.collection.delete_one({"_id": obj_id})
+
+    async def pan_masked_exists(self, pan_masked: str) -> bool:
+        doc = await self.collection.find_one({"pan_masked": pan_masked})
+        return doc is not None

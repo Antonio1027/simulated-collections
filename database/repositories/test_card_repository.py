@@ -62,3 +62,20 @@ async def test_delete_card():
     assert delete_result.deleted_count == 1
     card = await repo.get_by_id(inserted_id)
     assert card is None
+
+
+@pytest.mark.asyncio
+async def test_pan_masked_exists():
+    mock_collection = MockCollection()
+    repo = CardRepository()
+    repo.collection = mock_collection
+    card_data = {
+        "_id": "64b8f0f5e1d3f2a5c6b7d8e9",
+        "cliente_id": "64b8f0f5e1d3f2a5c6b7d8e8",
+        "pan_masked": "************5678",
+        "last4": "5678",
+        "bin": "123456",
+    }
+    await repo.create(card_data)
+    exists = await repo.pan_masked_exists("************5678")
+    assert exists

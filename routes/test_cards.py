@@ -69,6 +69,9 @@ def test_create_card(new_card_data, monkeypatch):
     monkeypatch.setattr(CardRepository, "create", mock_card_repository_create)
     monkeypatch.setattr(CardRepository, "get_by_id", mock_card_repository_get_by_id)
     monkeypatch.setattr(ClientRepository, "get_by_id", mock_client_repository_get_by_id)
+    monkeypatch.setattr(
+        CardRepository, "pan_masked_exists", lambda *args, **kwargs: False
+    )
     response = client.post("/tarjetas/", json=new_card_data)
     assert response.status_code == 200
     data = response.json()
@@ -77,6 +80,17 @@ def test_create_card(new_card_data, monkeypatch):
     assert data["pan_masked"] == "************5678"
     assert data["last4"] == "5678"
     assert data["bin"] == "123456"
+
+
+def test_card_create_card_pan_masked_exist(new_card_data, monkeypatch):
+    monkeypatch.setattr(CardRepository, "create", mock_card_repository_create)
+    monkeypatch.setattr(ClientRepository, "get_by_id", mock_client_repository_get_by_id)
+    monkeypatch.setattr(
+        CardRepository, "pan_masked_exists", lambda *args, **kwargs: True
+    )
+    response = client.post("/tarjetas/", json=new_card_data)
+    assert response.status_code == 400
+    assert response.json() == {"detail": "Card with this PAN already exists"}
 
 
 def test_create_card_with_client_not_found(new_card_data, monkeypatch):
