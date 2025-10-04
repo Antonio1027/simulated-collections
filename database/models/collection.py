@@ -12,6 +12,6 @@ class NewCollection(BaseModel, ModelWithObjectId, ClientId, AuditDateTimeFields)
     status: Optional[str] = None
     codigo_motivo: str
     reembolsado: Optional[bool] = None
-    fecha_reembolso: Optional[str] = None
+    fecha_reembolso: Optional[datetime] = None
     nombre: str
     descripcion: Optional[str]

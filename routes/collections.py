@@ -26,3 +26,21 @@ async def create_collection(collection: NewCollection) -> NewCollection:
 async def get_collections_by_client_id(client_id: str) -> List[NewCollection]:
     collections = await collection_repository.get_by_client_id(client_id)
     return [NewCollection(**collection) for collection in collections]
+
+
+@router.post("/{cobro_id}/reembolso")
+async def create_collection_refund(cobro_id: str) -> NewCollection:
+    collection = await collection_repository.get_by_id(cobro_id)
+    if not collection:
+        raise HTTPException(status_code=404, detail="Collection not found")
+    if collection.get("status") == "declined":
+        raise HTTPException(status_code=404, detail="Collection has a declined status")
+    if collection.get("reembolsado") == True:
+        raise HTTPException(
+            status_code=404, detail="Collection has already been refunded"
+        )
+    collection["reembolsado"] = True
+    collection["fecha_reembolso"] = datetime.now()
+    collection["updated_at"] = datetime.now()
+    await collection_repository.update(cobro_id, collection)
+    return NewCollection(**collection)

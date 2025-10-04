@@ -41,3 +41,11 @@ class CollectionRepository(BaseRepository):
         async for doc in result:
             collections.append(doc)
         return len(collections)
+
+    async def update(self, collection_id: str, update_data: dict):
+        try:
+            object_id = ObjectId(collection_id)
+        except Exception:
+            return None
+        await self.collection.update_one({"_id": object_id}, {"$set": update_data})
+        return await self.get_by_id(collection_id)
