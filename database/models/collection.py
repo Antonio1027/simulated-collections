@@ -2,9 +2,10 @@ from datetime import datetime
 from pydantic import BaseModel
 from typing import Optional
 from database.models.custom_validators import ModelWithObjectId, ClientId
+from database.models.custom_fields import AuditDateTimeFields
 
 
-class NewCollection(BaseModel, ModelWithObjectId, ClientId):
+class NewCollection(BaseModel, ModelWithObjectId, ClientId, AuditDateTimeFields):
     tarjeta_id: str
     monto: float
     fecha_intento: datetime

@@ -2,6 +2,7 @@ from fastapi import APIRouter, HTTPException
 from database.models.card import NewCard, Card
 from database.repositories.card_repository import CardRepository
 from database.repositories.client_repository import ClientRepository
+from datetime import datetime
 
 router = APIRouter(prefix="/tarjetas", tags=["Cards"])
 card_repository = CardRepository()
@@ -30,6 +31,7 @@ async def get_card_by_id(id: str) -> Card:
 
 @router.put("/{id}", response_model=Card)
 async def update_card(id: str, card_update: Card) -> Card:
+    card_update.updated_at = datetime.now()
     update_data = card_update.model_dump(exclude_unset=True)
     updated_card = await card_repository.update(id, update_data)
     if not updated_card:

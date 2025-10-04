@@ -10,7 +10,6 @@ client_repository = ClientRepository()
 @router.post("/", response_model=NewClient)
 async def create_client(client: NewClient):
     client.created_at = datetime.now()
-    client.updated_at = datetime.now()
     client_dict = client.model_dump(exclude_unset=True)
     if not await client_repository.is_email_unique(client.email):
         raise HTTPException(status_code=400, detail="Email already exists")
@@ -29,6 +28,7 @@ async def get_client(id: str):
 
 @router.put("/{id}", response_model=Client)
 async def update_client(id: str, client_update: Client):
+    client_update.updated_at = datetime.now()
     update_data = client_update.model_dump(exclude_unset=True)
     update_data["updated_at"] = datetime.now()
     updated_client = await client_repository.update(id, update_data)
